@@ -1,0 +1,128 @@
+
+#Notes for the Cousera Peer Reviewer:
+######################################
+#Programmer: Ankan Basu, PG, CPG, website:www.coalgeology.com
+#this is bit more advanced version of the RPSLS code using classes.
+#If you are new to Python, don't be confused.
+#I followed every instructions in the course for the lab.
+
+
+########
+# A valid CodeSkulptor URL was submitted.
+# Program implements the function rpsls() : See line 7
+# the helper function name_to_number() with plausible code: see line 39
+#Running program does not throw an error.
+#Program prints blank lines between games.
+#Program prints "Player chooses player_guess" 
+#Program prints "Computer chooses computer_guess" 
+#Computer's guesses vary between runs of the program.
+#Program prints either "Player and computer tie!", "Player wins!" or "Computer wins!" to report outcome. (1 pt for each message.)
+#Program chooses correct winner according to RPSLS rules. 
+########
+
+
+# helper functions
+import math
+import random
+import simplegui
+
+
+
+class RPSLS:
+    cname='' #create a class variable
+    number=0 #create a class variable
+    def __init__(self):    
+        #create a frame and add an input button
+        self.frame = simplegui.create_frame("GUI-based RPSLS", 400, 200)
+        self.frame.set_canvas_background('Yellow')
+        self.inp=self.frame.add_input("Enter guess for RPSLS", self.get_guess, 200)
+        self.button = self.frame.add_button('Play', self.play_game)
+        
+
+        self.frame.start()
+
+        
+    def draw_handler(self, canvas):
+        self.canvas=canvas
+        #self.canvas.draw_text('Play the RPLSL game', (100, 20), 20, 'Red')
+        
+        self.canvas.draw_text('Player Chooses', (20, 60), 20, 'Red')
+        self.canvas.draw_text(self.guess, (190, 60), 20, 'Black') 
+        
+        self.canvas.draw_text('Computer Chooses', [20, 90], 20, 'Blue')
+        self.canvas.draw_text(self.x, (190, 90), 20, 'Black')
+
+            
+        self.canvas.draw_text(self.label, (20, 140), 30, 'Blue', 'serif')
+        self.canvas.draw_text("Code by Ankan Basu, admin@coalgeology.com", (20, 180), 13, 'Red', 'serif')
+
+        
+        
+    #Get the Guess from our user    
+    def get_guess(self,guess):
+        self.guess=self.inp.get_text() # get input
+                        
+    #convert user guess to a number.    
+    def name_to_number(self):
+        if self.guess=='rock':
+            RPSLS.number+=0
+        elif self.guess=='Spock':
+            RPSLS.number+=1
+        elif self.guess=='paper':
+            RPSLS.number+=2
+        elif self.guess=='lizard':
+            RPSLS.number+=3
+        elif self.guess=='scissors':
+            RPSLS.number+=4
+        #print "name to number", RPSLS.number, for debugging ony
+        
+    def number_to_name(self):
+        if self.comp_number==0:
+            RPSLS.cname+='rock'
+        elif self.comp_number==1:
+            RPSLS.cname+='Spock'
+        elif self.comp_number==2:
+            RPSLS.cname+='Paper'
+        elif self.comp_number==3:
+            RPSLS.cname+='lizard'
+        elif self.comp_number==4:
+            RPSLS.cname+='scissors'
+        #print "number to name", RPSLS.cname, for debugging only
+    def play_game(self):
+        self.get_guess(self)
+        self.comp_number=random.randrange(0,5)#random number assigned to computer
+        self.rpsls() 
+        RPSLS.cname=''
+                    
+    def rpsls(self): 
+        #Added a namecheck using list
+        if self.guess in ['rock', 'Spock' , 'paper', 'lizard' , 'scissors']:
+            print "Player chooses",self.guess 
+            self.name_to_number() #RPSLS.number 
+            self.number_to_name() #RPSLS.cname
+            print "computer chooses", RPSLS.cname
+            self.x=RPSLS.cname
+            a=(RPSLS.number-self.comp_number)%5
+            # use if/elif/else to determine winner
+            if RPSLS.number==self.comp_number:
+                print "Player and computer tie!\n"
+                self.label="Player and computer tie!"
+
+            elif a<3:
+                print "Player Wins!\n"
+                self.label="Player Wins!"
+                
+            else:
+                print "Computer wins!\n"
+                self.label="Computer wins!"
+                
+            # convert comp_number to name using number_to_name
+        else:
+                print "Enter valid name"        
+                self.label="Enter Valid Name"
+                self.x="Enter Valid Guess"
+        self.frame.set_draw_handler(self.draw_handler)
+#create an object
+a=RPSLS()
+    
+
